@@ -1,0 +1,252 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include<string.h>
+
+typedef struct{
+
+struct Node * left ;
+struct Node * right;
+int hight;
+int data;
+
+}Node;
+
+typedef Node* Tree;
+Tree root = NULL;
+
+Tree find_Min(Tree t){
+
+if(t->left == NULL){
+    return t;
+}
+return find_Min(t->left);
+
+}
+
+int calc_hight(Tree t){
+
+int h1 = 0 , h2 = 0;
+if(t->left){
+   Tree t1 = t->left;
+    h1 = t1->hight;
+}
+if(t->right){
+    Tree t2 = t->right;
+    h2 = t2->hight;
+}
+
+return ( (h1 >= h2 ) ? h1 + 1 : h2 + 1);
+
+}
+
+int Balance_Factor(Tree t){
+
+int one = 0 , two = 0;
+if(t == NULL){return 0;}
+if(t ->left){
+  Tree t1 = t->left;
+  one = t1->hight;
+}
+if(t ->right){
+  Tree t1 = t->right;
+  two = t1->hight;
+}
+
+return one - two;
+}
+
+Tree LLR(Tree t1 ){
+
+Tree TL = t1->left;
+Tree TLR = TL->right;
+
+TL ->right = t1;
+t1->left = TLR;
+TL->hight = calc_hight(TL);
+t1->hight = calc_hight(t1);
+if(root == t1){
+    root = TL;
+}
+
+return TL;
+
+}
+
+Tree RRR(Tree t){
+
+Tree TR = t->right;
+Tree TRR = TR ->right;
+
+t->right = TR->left;
+TR->left = t;
+TR->hight = calc_hight(TR);
+t->hight = calc_hight(t);
+if(root == t){
+    root = TR;
+}
+
+return TR;
+}
+Tree RLR(Tree t){
+
+Tree TR = t->right;
+Tree TRL = TR->left;
+
+t->right = TRL->left;
+TR->left = TRL->right;
+TRL->left = t;
+TRL->right = TR;
+
+TR->hight = calc_hight(TR);
+t->hight = calc_hight(t);
+TRL->hight = calc_hight(TRL);
+
+if(root == t){
+    root = TRL;
+}
+return TRL;
+}
+Tree LRR(Tree t){
+
+Tree TL = t->left;
+Tree TLR = TL->right;
+TL->right = TLR->left;
+t->left = TLR-> right;
+
+TLR->left = TL;
+TLR->right = t;
+
+TL ->hight = calc_hight(TL);
+t->hight = calc_hight(t);
+TLR ->hight = calc_hight(TLR);
+if(root == t){
+    root = TLR;
+}
+return TLR;
+
+}
+Tree insert(Tree t , int number){
+
+
+if(t == NULL){
+
+Tree n = (Tree)malloc(sizeof(Node));
+n->data = number;
+n->left = n->right = NULL;
+n->hight = 1;
+t = n;
+return t;
+}
+
+if(number < t->data){
+    t->left = insert(t->left , number);
+}
+if(number > t->data){
+    t->right = insert(t->right , number);
+}
+
+t->hight =calc_hight(t);
+
+if(Balance_Factor(t) == 2 && Balance_Factor(t->left) == 1){
+    return LLR(t);
+}
+else if(Balance_Factor(t) == 2 && Balance_Factor(t->left) == -1){
+    return LRR(t);
+}
+else if(Balance_Factor(t) == -2 && Balance_Factor(t->right) == -1){
+    return RRR(t);
+}
+else if(Balance_Factor(t) == -2 && Balance_Factor(t->right) ==1 ){
+    return RLR(t);
+}
+
+
+return t;
+
+}
+
+
+Tree Delete(Tree t , int number){
+
+if(t == NULL){
+
+printf("Element not found !!\n");
+return NULL;
+}
+
+if(number < t->data){
+   t->left =  Delete(t->left , number);
+}
+else if(number > t->data){
+    t->right = Delete(t->right , number);
+}
+else if(t->left && t->right){
+
+Tree Tmp = find_Min(t->right);
+t->data = Tmp->data;
+t->right = Delete(t->right , Tmp->data);
+}
+else{
+    if(t->left){
+       Tree Tmp = t->left;
+        free(t);
+        return Tmp;
+    }
+    if(t->right){
+    Tree Tmp = t->right;
+    free(t);
+    return Tmp;
+    }
+    if(t->left == NULL && t->right == NULL){
+        free(t);
+        return NULL;
+    }
+}
+
+if(Balance_Factor(t) == 2 && Balance_Factor(t->left) == 1){
+    return LLR(t);
+}
+else if(Balance_Factor(t) == 2 && Balance_Factor(t->left) == -1){
+    return LRR(t);
+}
+else if(Balance_Factor(t) == -2 && Balance_Factor(t->right) == -1){
+    return RRR(t);
+}
+else if(Balance_Factor(t) == -2 && Balance_Factor(t->right) ==1 ){
+    return RLR(t);
+}
+
+
+
+return t;
+
+}
+
+void IN(Tree t){
+
+if(t){
+
+    IN(t->left);
+    printf("%d " , t->data);
+    IN(t->right);
+
+}
+
+}
+
+
+int main(){
+
+root = insert(root , 100);
+insert(root , 50);
+insert(root , 60);
+insert(root , 65);
+Delete(root , 60);
+printf("%d " , root->data);
+
+
+
+
+
+    return 0;
+}
