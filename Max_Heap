@@ -48,6 +48,33 @@ A[index] = temp;
 
 }
 
+void Heapify(int A[] , int index , int size){
+
+int largest = index ;
+
+if(2 * index <= size && A[2 * index] > A[largest]){
+
+largest = 2 * index;
+
+}
+
+if(2 * index + 1 <= size && A[2 * index + 1] > A[largest]){
+    largest = 2 * index + 1;
+}
+
+
+if(largest != index){
+
+int tmp = A[largest];
+A[largest] = A[index];
+A[index] = tmp;
+Heapify(A, largest , size);
+}
+
+
+}
+
+
 int main()
 {
 
@@ -136,7 +163,17 @@ default:
 printf("GoodBye ! \n");
 
 
+int Array [] = { -1 ,10 , 2 , 1 , 22 , 15};
 
 
+for(int i = 3 ; i > 0 ; i -- )
+Heapify(Array , i , 5);
+
+for(int i = 1 ;i <= 5 ;i ++ ){
+    Delete_Front(Array , 5 - i + 1);
+}
+for(int i = 1 ;i <= 5 ;i ++ ){
+    printf("%d ",Array[i]);
+}
     return 0;
 }
