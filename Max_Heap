@@ -1,0 +1,135 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// if you want to make min heap just turn the '>' sign to '<' :) 
+void Insert(int A[] , int index ){
+
+int number;
+printf("Enter the number\n");
+scanf("%d",&number);
+
+
+while(index > 1 && A[index / 2] < number){
+
+A[index] = A[index / 2];
+index/=2;
+
+}
+
+A[index] = number;
+
+}
+
+void Delete_Front(int A[] , int index){
+
+int temp = A[1];
+
+A[1] = A[index ];
+
+int i = 1;
+
+while(i * 2 < index && ( i * 2 + 1 ) < index){
+
+if(A[i] > A[i * 2] && A[i] > A[ i * 2 + 1])break;
+
+
+if (A[i * 2] > A[i * 2 + 1]){
+
+int tmp = A[i * 2];
+A[i * 2] = A[i];
+A[i] = tmp;
+
+i *= 2;
+
+}
+else if(A[i * 2 + 1] > A[i * 2]){
+
+int tmp = A[ i * 2 + 1];
+A[i * 2 + 1] = A[i];
+A[i] = tmp;
+
+i*=2;
+i ++ ;
+}
+
+
+}
+
+A[index] = temp;
+
+}
+
+int main()
+{
+
+int n;
+printf("What is the max size of your priority queue ? \n");
+scanf("%d",&n);
+int * A = (int *)malloc(sizeof(int) * (n + 1) );
+
+A[0] = INT_MAX;
+
+int in = 0;
+
+
+int ch;
+
+do{
+
+
+
+printf("1.Adding new element \n");
+printf("2.Delete front\n");
+printf("3.Print Front\n");
+printf("4.Exit\n");
+scanf("%d",&ch);
+
+switch(ch){
+
+
+case 1 :
+    if(in + 1 > n){
+        printf("Size full\n");
+    }
+    else{
+printf("Adding ... \n");
+Insert(A , in + 1);
+in ++ ;
+    }
+
+    break;
+case 2:
+    if(in == 0){
+        printf("Empty\n");
+    }
+    else{
+        printf("Delete\n");
+        Delete_Front(A , in);in -- ;
+    }
+    break;
+case 3:
+    if(in >= 1){
+        printf(" Front = %d \n" , A[1] );
+    }
+    else
+    {
+        printf("INF\n");
+    }
+    break;
+default :
+    if(ch > 4 || ch < 1)
+    printf("Invalid choice\n");
+    break;
+
+}
+
+
+}while(ch != 4);
+
+printf("GoodBye ! \n");
+
+
+
+
+    return 0;
+}
