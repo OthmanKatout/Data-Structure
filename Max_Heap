@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// if you want to make min heap just turn the '>' sign to '<' :) 
+
 void Insert(int A[] , int index ){
 
 int number;
@@ -26,31 +26,20 @@ int temp = A[1];
 
 A[1] = A[index ];
 
+
 int i = 1;
 
-while(i * 2 < index && ( i * 2 + 1 ) < index){
+while(i * 2 <= index ){
 
-if(A[i] > A[i * 2] && A[i] > A[ i * 2 + 1])break;
-
-
-if (A[i * 2] > A[i * 2 + 1]){
-
-int tmp = A[i * 2];
-A[i * 2] = A[i];
-A[i] = tmp;
-
-i *= 2;
-
+int j = i * 2;
+if(j + 1 <= index && A[j + 1] > A[j]){
+    j ++ ;
 }
-else if(A[i * 2 + 1] > A[i * 2]){
-
-int tmp = A[ i * 2 + 1];
-A[i * 2 + 1] = A[i];
+if(A[i] >= A[j])break;
+int tmp = A[j];
+A[j] = A[i];
 A[i] = tmp;
-
-i*=2;
-i ++ ;
-}
+i = j;
 
 
 }
@@ -81,7 +70,8 @@ do{
 printf("1.Adding new element \n");
 printf("2.Delete front\n");
 printf("3.Print Front\n");
-printf("4.Exit\n");
+printf("4.Use heap sort \n");
+printf("5.Exit\n");
 scanf("%d",&ch);
 
 switch(ch){
@@ -116,15 +106,32 @@ case 3:
         printf("INF\n");
     }
     break;
-default :
-    if(ch > 4 || ch < 1)
-    printf("Invalid choice\n");
-    break;
+case 4:
+    printf("Using Heap sort that is O(nlogn) to sort the elements \n");
+    int size;scanf("%d",&size);
+    int *Arr = (int *)malloc(sizeof(int) * (size + 1) );
+    for(int i = 1 ;i <= size ; i ++ ){
+        Insert(Arr,i);
+    }
+    for(int i = 1 ;i <= size  ; i ++){
+        Delete_Front(Arr , size - i + 1);
+    }
+
+for(int i = 1 ; i <= size ;i ++ ){
+    printf("%d ",Arr[i]);
+}
+printf("\n");
+
+
+default:
+    if(ch > 5 || ch < 0){
+        printf("Invalid choice\n");
+    }
 
 }
 
 
-}while(ch != 4);
+}while(ch != 5);
 
 printf("GoodBye ! \n");
 
